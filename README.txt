@@ -1,7 +1,11 @@
+Random-Forests-Matlab
+=====================
+A MATLAB implementation of a random forest classifier using the ID3 algorithm for decision trees.
+
 ID3-Decision-Tree
 =================
 
-A MATLAB implementation of the ID3 decision tree algorithm for EECS349 - Machine Learning
+A MATLAB implementation of the ID3 decision tree algorithm 
 
 Quick installation:
 -Download the files and put into a folder
