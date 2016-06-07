@@ -37,7 +37,7 @@ for i=1:trees
             for y = 1:variables
                 testSet(testcount, y) = examples (x, rAttr(y));
             end
-            testSet( testcount, y) = examples (x,rAttr(y));   
+            testSet( testcount, y) = examples (x,numberAttr+1);   
             testcount = testcount +1;
         end
     end
