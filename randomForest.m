@@ -7,12 +7,12 @@ trees = 10; % Number of trees
 struct forests[10] = ('tree', 'oob');  % oob is Out of Bag error for each tree 
 randEx = (632/1000)*numberEx;  % Number of random examples          
 subEx = [randEx, variables+1]; % Sub-matrix for examples
+activeEx = (numberEx - randEx); % Examples left
 
 % Making the forest
 for i=1:trees
     rAttr = randperm(numberAttr, variables);
     rEx = randperm(numberEx, randEx);
-    activeEx = ones(numberEx - randEx); % Examples left  
     for x=1:randEx
         activeEx(rEx(x)) = 0; % Removing examples that have been used
         for y=1:variables
