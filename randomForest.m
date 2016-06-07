@@ -6,7 +6,7 @@ variables = sqrt(numberAttr);
 trees = 10; % Number of trees
 struct forests[10] = ('tree', 'oob');  % oob is Out of Bag error for each tree 
 randEx = (632/1000)*numberEx;  % Number of random examples          
-subEx = [randEx, variables+1]; % Sub-matrix for examples
+subEx = zeroes(randEx, variables+1); % Sub-matrix for examples
 
 % Making the forest
 for i=1:trees
