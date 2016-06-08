@@ -6,12 +6,11 @@ function [oob] = outOfBoxError(tree, testSet, subAttr)
                     
                     
   actual = testSet(:, size(testSet,2) );
-  instance = testSet(:, 1:size(testSet,2)-1 );
   correct = 0;
   
   
   for i = 1:size(testSet,1)
-    prediction = ClassifyByTree(tree, subAttr, instance(i,:) );
+    prediction = ClassifyByTree(tree, subAttr, testSet(i, :) );
     if( strcmp( prediction, actual(i) ) == 0 )
       correct = correct + 1;
     end
