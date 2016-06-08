@@ -1,6 +1,5 @@
 function [classifications] = ClassifyByTree(tree, attributes, instance)
     attr = categorical(attributes);
-    actual = instance(1, length(instance));
     if( sum(tree.value==attr) )
         index = find(ismember(attributes, tree.value) == 1);
         if (instance(1, index) <= tree.bound ); % attribute is true for this instance
@@ -11,6 +10,6 @@ function [classifications] = ClassifyByTree(tree, attributes, instance)
         classifications = ClassifyByTree(tree.left, attributes, instance);
         end
     else
-        classifications = [tree.value, actual];  % Needed to check for accuracy
+        classifications tree.value, actual
     end    
 end
