@@ -10,6 +10,6 @@ function [classifications] = ClassifyByTree(tree, attributes, instance)
         classifications = ClassifyByTree(tree.left, attributes, instance);
         end
     else
-        classifications tree.value, actual
+        classifications tree.value;
     end    
 end
