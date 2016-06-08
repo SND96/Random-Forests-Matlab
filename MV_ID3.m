@@ -2,7 +2,7 @@ function [tree] = MV_ID3(examples, attributes, activeAttributes)
 
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
-struct tree=('value','left','right')
+struct tree=('value','bound','left','right')
 examples = sortrows(examples, numberAttr+1); % Sorts examples based on the last column
 lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
@@ -122,7 +122,8 @@ end
 index = gainind(ind); % Required index
 fBound = boundOut(ind); % Decision boundary
 ele = un(index); % Outcome element being used in one vs all
-tree.value=attributes(index);
+tree.value = attributes(index);
+tree.bound = fbound;
 activeAttributes(index) = 0;
 ex_1=[];
 ex_0=[];
