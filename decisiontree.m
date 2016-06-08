@@ -111,7 +111,7 @@ for i=1:numberOfTrials;
     % Construct a decision tree on the training set using the ID3 algorithm
     activeAttributes = ones(1, length(attributes) - 1);
     new_attributes = attributes(1:length(attributes)-1);
-    tree = ID3(trainingSet, attributes, activeAttributes);
+    tree = MV_ID3(trainingSet, attributes, activeAttributes);
     
     % Print out the tree
     fprintf('DECISION TREE STRUCTURE:\n');
