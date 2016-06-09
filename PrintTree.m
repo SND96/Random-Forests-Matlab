@@ -1,23 +1,26 @@
-function [] = PrintTree(tree, parent)
+function [] = PrintTree(tree, parent, bound)
 % Prints the tree structure (preorder traversal)
 
 % Print current node
-if (strcmp(tree.value, 'true'));
-    fprintf('parent: %s\ttrue\n', parent);
+if (tree.value == 1);
+    fprintf('parent: setosa' );
     return
-elseif (strcmp(tree.value, 'false'));
-    fprintf('parent: %s\tfalse\n', parent);
+elseif (tree.value == 2);
+    fprintf('parent: virginica' );
     return
+elseif (tree.value == 3);
+    fprintf('parent: something' );
+    return    
 else
     % Current node an attribute splitter
-    fprintf('parent: %s\tattribute: %s\tfalseChild:%s\ttrueChild:%s\n', ...
-        parent, tree.value, tree.left.value, tree.right.value);
+    fprintf('parent: %s\tattribute: %s\tfalseChild:%s\ttrueChild:%s\tBoundary:%s \n', ...
+        parent, tree.value, tree.left.value, tree.right.value, bound);
 end
 
 % Recur the left subtree
-PrintTree(tree.left, tree.value);
+PrintTree(tree.left, tree.value, tree.bound);
 
 % Recur the right subtree
-PrintTree(tree.right, tree.value);
+PrintTree(tree.right, tree.value, tree.bound);
 
 end
