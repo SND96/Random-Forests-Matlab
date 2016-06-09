@@ -3,6 +3,7 @@ function [tree] = MV_ID3(examples, attributes, activeAttributes)
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
 tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
+
 examples = sortrows(examples, numberAttr+1); % Sorts examples based on the last column
 lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
@@ -144,6 +145,7 @@ for j=1:numberEx
 		ex0_index = ex0_index+1;
 	end
 end
+
 if (isempty(ex_0));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
@@ -154,6 +156,11 @@ if (isempty(ex_0));
     leaf.value =  un(instance);
     tree.right = leaf;
 else
+    lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
+    un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
+    if(length(un)==1)
+        activeAttributes = ones(numberAttr);  % Resetting the attributes for classification for greater accuracy
+    end
     % Recurring here
     tree.left = MV_ID3(ex_0, attributes, activeAttributes);
 end
@@ -167,8 +174,13 @@ if (isempty(ex_1));
     [~, instance] = max(occu);    
     leaf.value =  un(instance);
     tree.right = leaf;
-else   
-    % Recurring here
+else
+    lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
+    un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
+    if(length(un)==1)
+        activeAttributes = ones(numberAttr);  % Resetting the attributes for classification for greater accuracy
+    end
+     % Recurring here
     tree.right = MV_ID3(ex_1, attributes, activeAttributes);
 end
 
