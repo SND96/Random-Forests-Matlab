@@ -7,21 +7,23 @@ tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
 examples = sortrows(examples, numberAttr+1); % Sorts examples based on the last column
 lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-ele = un(1);
+%					ele = un(1);
 num_outcome = length(un);  % Stores number of unique outcomes
 if(num_outcome == 1)
-    tree.value = ele;
+    tree.value = un(1);
     return
 end    
 occu = zeros(num_outcome);
 if (sum(activeAttributes) == 0);
     % Counting outcome with highest frequency and assigning that as value
     for k=1:num_outcomes
-        occu(k) = sum(un(k)==lastColumn); % Checks element equality
+        occu( lastColumn(k) ) = occu( lastColumn(k) ) + 1;
     end    
     [~, instance] = max(occu);    
     tree.value = un(instance);
 end    
+
+
 gainx = zeros(num_outcome);
 gainind = zeros(num_outcome);
 boundOut = zeros(num_outcome);
