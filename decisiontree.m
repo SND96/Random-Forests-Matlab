@@ -20,7 +20,7 @@ function[] = decisiontree(inputFileName)
 %                         results for the trials
 
 formatSpec = '%f%f%f%f%C';
-set = readtable(inputFileName,'Delimiter',',',...
+ex = readtable(inputFileName,'Delimiter',',',...
     'Format',formatSpec);
 
 % NOTE: The classification will be the final attribute in the data rows
@@ -36,15 +36,25 @@ set = readtable(inputFileName,'Delimiter',',',...
 %         i = i + 1;
 %     end
 % end
-set = table2cell(set);
-attributes = ['sepal length', 'sepal width','petal length in cm','petal width in cm'];
+ex = table2cell(ex);
+for i=1:150
+   if(strcmp('Iris-sentosa',ex{i,5}))
+        ex{i,5} = 1;
+   elseif(strcmp('Iris-virginica',ex(i,5)))
+        ex{i,5} = 2;
+   else
+       ex{i,5} = 3;
+   end        
+end    
+ex = cell2mat(ex);
+attributes = ['sepal length', 'sepal width','petal length','petal width'];
 numAttributes = 4;
 % Here is where the trials start
 %for i=1:numberOfTrials;
     
     % Print the trial number
    % fprintf('Trial: %d\n\n', i);
-    tree = MV_ID3(set, values, attributes, ones(numAttributes));
+    tree = MV_ID3(ex, attributes, ones(numAttributes));
     
     % Split data into training and testing sets randomly
 %     % Use randsample to get a vector of row numbers for the training set

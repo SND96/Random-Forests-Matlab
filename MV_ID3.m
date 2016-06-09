@@ -1,12 +1,14 @@
-function [tree] = MV_ID3(examples,lastColumn, attributes, activeAttributes)
+function [tree] = MV_ID3(examples, attributes, activeAttributes)
 
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
-struct tree=('value','bound','left','right');
-tree.value = {};
+
+tree.value = {}; % Tree structure
 tree.bound = {};
 tree.right = {};
 tree.left = {};
+examples = sortrows(examples, numberAttr+1); % Sorts examples based on the last column
+lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
 ele = un(1);
 num_outcome = length(un);  % Stores number of unique outcomes
@@ -53,7 +55,7 @@ for k=1:num_outcome
     gains = -1*ones(1,numberAttr);    
     for i=1:numberAttr
         if (activeAttributes~=0)
-            
+            examples = sortrows(examples, i);
             for l=1:numberEx
                 % Finding decision boundary for iteration
                 test = examples(l,i);        
@@ -131,8 +133,6 @@ ex_1=[];
 ex_0=[];
 ex1_index=1;
 ex0_index=1;
-values_1=[];
-values_0=[];
 % Making the two sub-arrays based on the decision boundary for the best
 % attribute
 for j=1:numberEx
@@ -140,13 +140,11 @@ for j=1:numberEx
 		for i=1:numberAttr+1
 			ex_1(ex1_index,i) = examples(ex1_index,i);
 		end
-		values_1(ex1_index) = lastColumn(j);
 		ex1_index = ex1_index+1;
 	else
 		for i=1:numberAttr+1
 			ex_0(ex0_index,i) = examples(ex0_index,i);
 		end
-		values_0(ex0_index) = lastColumn(j);
 		ex0_index = ex0_index+1;
 	end
 end
@@ -161,7 +159,7 @@ if (isempty(ex_0));
     tree.right = leaf;
 else
     % Recurring here
-    tree.left = MV_ID3(ex_0, values_0, attributes, activeAttributes);
+    tree.left = MV_ID3(ex_0, attributes, activeAttributes);
 end
 
 if (isempty(ex_1));
@@ -175,7 +173,7 @@ if (isempty(ex_1));
     tree.right = leaf;
 else   
     % Recurring here
-    tree.right = MV_ID3(ex_1,values_1, attributes, activeAttributes);
+    tree.right = MV_ID3(ex_1, attributes, activeAttributes);
 end
 
 return
