@@ -149,7 +149,7 @@ end
 if (isempty(ex_0));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
-    for k=1:num_outcomes
+    for k=1:num_outcome
         occu(k) = sum(un(k)==lastColumn);
     end    
     [~, instance] = max(occu);    
@@ -158,7 +158,7 @@ if (isempty(ex_0));
 else
     lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
     un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-    if(length(un)==1)
+    if(length(un)<num_outcome)
         activeAttributes = ones(numberAttr);  % Resetting the attributes for classification for greater accuracy
     end
     % Recurring here
@@ -168,7 +168,7 @@ end
 if (isempty(ex_1));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
-    for k=1:num_outcomes
+    for k=1:num_outcome
         occu(k) = sum(un(k)==lastColumn);
     end    
     [~, instance] = max(occu);    
@@ -177,7 +177,7 @@ if (isempty(ex_1));
 else
     lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
     un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-    if(length(un)==1)
+    if(length(un)<num_outcome)
         activeAttributes = ones(numberAttr);  % Resetting the attributes for classification for greater accuracy
     end
      % Recurring here
