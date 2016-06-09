@@ -2,6 +2,7 @@ function [tree] = MV_ID3(examples, attributes, activeAttributes)
 
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
+tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
 
 tree.value = {}; % Tree structure
 tree.bound = {};
@@ -149,7 +150,7 @@ for j=1:numberEx
 	end
 end
 if (isempty(ex_0));
-    leaf = struct('value',  'left', 'right');
+    leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
     for k=1:num_outcomes
         occu(k) = sum(un(k)==lastColumn);
@@ -163,7 +164,7 @@ else
 end
 
 if (isempty(ex_1));
-    leaf = struct('value', 'left', 'right');
+    leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
     for k=1:num_outcomes
         occu(k) = sum(un(k)==lastColumn);
