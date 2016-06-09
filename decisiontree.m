@@ -21,7 +21,7 @@ function[] = decisiontree(inputFileName)
 
 formatSpec = '%f%f%f%f%C';
 ex = readtable(inputFileName,'Delimiter',',',...
-    'Format',formatSpec);
+    'Format',formatSpec); %Inputting file in a way that can be seperated easily
 
 % NOTE: The classification will be the final attribute in the data rows
 % below
@@ -36,8 +36,8 @@ ex = readtable(inputFileName,'Delimiter',',',...
 %         i = i + 1;
 %     end
 % end
-ex = table2cell(ex);
-for i=1:150
+ex = table2cell(ex); 
+for i=1:150   % Outcomes as numbers
    if(strcmp('Iris-sentosa',ex{i,5}))
         ex{i,5} = 1;
    elseif(strcmp('Iris-virginica',ex(i,5)))
@@ -54,7 +54,7 @@ numAttributes = 4;
     
     % Print the trial number
    % fprintf('Trial: %d\n\n', i);
-    tree = MV_ID3(ex, attributes, ones(numAttributes));
+    tree = MV_ID3(ex, attributes, ones(numAttributes)); %Duh
     
     % Split data into training and testing sets randomly
 %     % Use randsample to get a vector of row numbers for the training set
