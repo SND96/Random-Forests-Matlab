@@ -3,11 +3,6 @@ function [tree] = MV_ID3(examples, attributes, activeAttributes)
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
 tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
-
-tree.value = {}; % Tree structure
-tree.bound = {};
-tree.right = {};
-tree.left = {};
 examples = sortrows(examples, numberAttr+1); % Sorts examples based on the last column
 lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
