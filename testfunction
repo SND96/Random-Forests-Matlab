@@ -1,0 +1,21 @@
+function [] = testfunction()
+
+    ex = load('irisdata.txt');
+
+
+    attributes = ['sepal length', 'sepal width','petal length','petal width'];
+    numAttributes = 4;
+
+    %Perform K-Means Clustering on data set- 6 Clusters (2 times the total number of attributes)
+    for i =1:numAttributes
+        ex(:,i) = kmeans(ex(:,i),6);
+    end
+
+   tree = ID3(ex, attributes, ones(numAttributes))
+
+   PrintTree(tree,null,null);
+   for i = 1:150
+        outcome = ClassifyByTree(tree, attributes, ex(i,:));
+        fprintf(outcome);
+    end
+end
