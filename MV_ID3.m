@@ -130,7 +130,7 @@ end
 [~, ind]  = max(gainx);
 index = gainind(ind); % Required index
 fBound = boundOut(ind); % Decision boundary
-tree.value = attributes{index};
+tree.value = attributes(index);
 tree.bound = fBound;
 activeAttributes(index) = 0;
 ex_1=[];
