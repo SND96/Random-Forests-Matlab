@@ -54,15 +54,11 @@ for k=1:num_outcome
     currentEnt = p_ent1+p_ent0;
     gains = -1*ones(1,numberAttr+1);    
     for i=1:numberAttr
-        if (activeAttributes(i)~=0)        
-            for l=1:(numberEx-1)
-                examples =  sortrows(examples,i);
+        if (activeAttributes(i)~=0)
+                    
+            for l=1:numberEx
                 % Finding decision boundary for iteration
-                if(examples(l,i)== examples(l+1,i))
-                    continue;
-                end    
-                test = (examples(l,i) + examples(l+1,i))/2;
-                %fprintf('%d  ', test);
+                test = examples(l,i);
                     s1=0;
                     s1_true=0;
                     s0=0;
@@ -120,7 +116,7 @@ for k=1:num_outcome
             % for each OUTCOME seperately
             [gainAttr(i),boundInd] = max(gains);
             
-            boundValue(i) = (examples(boundInd,i)+examples(boundInd+1,i))/2;
+            boundValue(i) = examples(boundInd,i);
         end
     end
     
@@ -143,6 +139,7 @@ ex1_index=1;
 ex0_index=1;
 % Making the two sub-arrays based on the decision boundary for the best
 % attribute
+
 for j=1:numberEx
 	if(examples(j,index)<=fBound)
 		for i=1:numberAttr+1
@@ -164,17 +161,19 @@ if (isempty(ex_0));
     end    
     [~, instance] = max(occu);    
     leaf.value =  un(instance);
-    tree.right = leaf;
+    tree.left = leaf;
     return;
     
 else
+    active = activeAttributes;
      lastColumn = ex_0(:, numberAttr+1);  % Stores the outcomes column
      un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-     if(length(un)<num_outcome)
-         activeAttributes = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
-     end
-    % Recurring here
-    tree.left = MV_ID3(ex_0, attributes, activeAttributes);
+     if(length(un)<num_outcome )
+         active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
+    end
+   % Recurring here
+   
+    tree.left = MV_ID3(ex_0, attributes, active);
 end
 if (isempty(ex_1));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
@@ -187,13 +186,16 @@ if (isempty(ex_1));
     tree.right = leaf;
     return
 else
+     active = activeAttributes;
      lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
      un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
      if(length(un)<num_outcome)
-         activeAttributes = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
+         active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
+     
      end
      % Recurring here
-    tree.right = MV_ID3(ex_1, attributes, activeAttributes);
+     
+    tree.right = MV_ID3(ex_1, attributes, active);
 end
 
 return
