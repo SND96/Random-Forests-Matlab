@@ -1,5 +1,5 @@
 function [tree] = MV_ID3(examples, attributes, activeAttributes)
-% MV_ID3   Runs the ID3 algorithm on the matrix of examples and attributes
+
 % args:
 %       examples            - matrix of 1s and 0s for trues and falses, the
 %                             last value in each row being the value of the
@@ -11,11 +11,13 @@ function [tree] = MV_ID3(examples, attributes, activeAttributes)
 %       tree                - the root node of a decision tree
 % tree struct:
 %       value               - will be the string for the splitting
-%                             attribute, or a number depicting the flower type for leaf noe
+%                             attribute, or a number depicting the flower type for leaf node
+%	bound		    - will be used to store the decision boundary	  			
 %       left                - left pointer to another tree node (left means
 %                             the splitting attribute was false)
 %       right               - right pointer to another tree node (right
 %                             means the splitting attribute was true)
+
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
 tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
@@ -24,12 +26,12 @@ lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
 num_outcome = length(un);  % Stores number of unique outcomes
 
-if(num_outcome == 1)
+if(num_outcome == 1) % Pure set
     tree.value = un;
     return
 end    
 occu = zeros(1,num_outcome);
-if (sum(activeAttributes) == 0);
+if (sum(activeAttributes) == 0); % No attributes left to split on
     % Counting outcome with highest frequency and assigning that as value
     for k=1:num_outcome
         occu(k) = sum(un(k)==lastColumn); % Checks element equality
@@ -82,7 +84,6 @@ for k=1:num_outcome
                     s0_true=0;
                 % Checking how many fall on each side of the boundary
                 for j=1:numberEx
-                    
                     if(examples(j,i)>test)
                         s0=s0+1;
                         if(examples(j,numberAttr+1)==ele)
@@ -125,12 +126,12 @@ for k=1:num_outcome
                     p_ent0=-1*p0*log2(p0);
                 end
                 ent_1=p_ent1+p_ent0;
-                
+                % End of Entropy calculation
                 gains(l)=currentEnt- ( ((s1/numberEx)*ent_1) + ((s0/numberEx)*ent_0) );  % Finding information gain
                 
             end
             % Picking best attribute and corresponding decision attribute
-            % for each OUTCOME seperately
+            % for each flower class seperately
             [gainAttr(i),boundInd] = max(gains);
             
             boundValue(i) = (examples(boundInd,i)+examples(boundInd+1,i))/2;
@@ -139,30 +140,27 @@ for k=1:num_outcome
     
     % Picking the attribute and corresponding boundary that maximizes gains
     [gainx(k), gainind(k)]=max(gainAttr);
-    
-    
-       
     boundOut(k) = boundValue(gainind(k));
 end
 % Finding the max information gain index.
-% This index allows us to access the corresponding outcome, attribute and
-% decision boundary
+% This index allows us to access the corresponding flower class, attribute and
+% decision boundary which will be used to split the tree
 [m, ind]  = max(gainx);
 index = gainind(ind); % Required index
 fBound = boundOut(ind); % Decision boundary
 tree.value = attributes{index};
 tree.bound = fBound;
-if(m==0)
+if(m==0) % When tree has zero information gain, recurrence must be stopped
     return
 end
-activeAttributes(index) = 0;
+activeAttributes(index) = 0; % Setting the attribute being split on to inactive
+
+% Making the two sub-arrays based on the decision boundary for the best
+% attribute
 ex_1=[];
 ex_0=[];
 ex1_index=1;
 ex0_index=1;
-% Making the two sub-arrays based on the decision boundary for the best
-% attribute
-
 for j=1:numberEx
 	if(examples(j,index)<=fBound)
 		for i=1:numberAttr+1
@@ -176,6 +174,8 @@ for j=1:numberEx
 		ex0_index = ex0_index+1;
 	end
 end
+
+% Making the branches and the leaves
 if (isempty(ex_0));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
@@ -191,17 +191,18 @@ else
     active = activeAttributes;
        lastColumn = ex_0(:, numberAttr+1);  % Stores the outcomes column
        un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-       if(length(un)<num_outcome )
-           active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
+       % Resetting the attributes for classification for greater accuracy
+       if(length(un)<num_outcome )  % Checking if number of flower classes has decreased
+           active = ones(1,numberAttr);  
       end
    % Recurring here
    
     tree.left = MV_ID3(ex_0, attributes, active);
 end
+
 if (isempty(ex_1));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
-     
     for k=1:num_outcome
         occu(k) = sum(un(k)==lastColumn);
     end    
@@ -213,12 +214,11 @@ else
      active = activeAttributes;
        lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
        un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-       if(length(un)<num_outcome)
-           active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
-       
+       % Resetting the attributes for classification for greater accuracy
+       if(length(un)<num_outcome) % Checking if number of flower classes has decreased
+           active = ones(1,numberAttr); 
       end
      % Recurring here
-     
     tree.right = MV_ID3(ex_1, attributes, active);
 end
 
