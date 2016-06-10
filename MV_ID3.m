@@ -14,7 +14,7 @@ if(num_outcome == 1)
     tree.value = un;
     return
 end    
-occu = zeros(num_outcome);
+occu = zeros(1,num_outcome);
 if (sum(activeAttributes) == 0);
     % Counting outcome with highest frequency and assigning that as value
     for k=1:num_outcome
@@ -55,10 +55,13 @@ for k=1:num_outcome
     gains = -1*ones(1,numberAttr+1);    
     for i=1:numberAttr
         if (activeAttributes(i)~=0)
-                    
-            for l=1:numberEx
+            examples=sortrows(examples,i);        
+            for l=1:(numberEx-1)
+                if( examples(l,i)==examples(l+1,i))
+                    continue;
+                end
                 % Finding decision boundary for iteration
-                test = examples(l,i);
+                test =( examples(l,i)+examples(l+1,i))/2;
                     s1=0;
                     s1_true=0;
                     s0=0;
@@ -116,7 +119,7 @@ for k=1:num_outcome
             % for each OUTCOME seperately
             [gainAttr(i),boundInd] = max(gains);
             
-            boundValue(i) = examples(boundInd,i);
+            boundValue(i) = (examples(boundInd,i)+examples(boundInd+1,i))/2;
         end
     end
     
@@ -164,7 +167,7 @@ if (isempty(ex_0));
     % Counting outcome with highest frequency and assigning that as value
     for k=1:num_outcome
         occu(k) = sum(un(k)==lastColumn);
-    end    
+    end
     [~, instance] = max(occu);    
     leaf.value =  un(instance);
     tree.left = leaf;
@@ -172,11 +175,11 @@ if (isempty(ex_0));
     
 else
     active = activeAttributes;
-     lastColumn = ex_0(:, numberAttr+1);  % Stores the outcomes column
-     un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-     if(length(un)<num_outcome )
-         active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
-    end
+       lastColumn = ex_0(:, numberAttr+1);  % Stores the outcomes column
+       un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
+       if(length(un)<num_outcome )
+           active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
+      end
    % Recurring here
    
     tree.left = MV_ID3(ex_0, attributes, active);
@@ -184,6 +187,7 @@ end
 if (isempty(ex_1));
     leaf = struct('value','null', 'left', 'null', 'right', 'null');
     % Counting outcome with highest frequency and assigning that as value
+     
     for k=1:num_outcome
         occu(k) = sum(un(k)==lastColumn);
     end    
@@ -193,12 +197,12 @@ if (isempty(ex_1));
     return
 else
      active = activeAttributes;
-     lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
-     un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-     if(length(un)<num_outcome)
-         active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
-     
-     end
+       lastColumn = ex_1(:, numberAttr+1);  % Stores the outcomes column
+       un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
+       if(length(un)<num_outcome)
+           active = ones(1,numberAttr);  % Resetting the attributes for classification for greater accuracy
+       
+      end
      % Recurring here
      
     tree.right = MV_ID3(ex_1, attributes, active);
