@@ -1,5 +1,21 @@
 function [tree] = MV_ID3(examples, attributes, activeAttributes)
-
+% MV_ID3   Runs the ID3 algorithm on the matrix of examples and attributes
+% args:
+%       examples            - matrix of 1s and 0s for trues and falses, the
+%                             last value in each row being the value of the
+%                             classifying attribute
+%       attributes          - cell array of attribute strings 
+%       activeAttributes    - vector of 1s and 0s, 1 if corresponding attr.
+%                             active 
+% return:
+%       tree                - the root node of a decision tree
+% tree struct:
+%       value               - will be the string for the splitting
+%                             attribute, or a number depicting the flower type for leaf noe
+%       left                - left pointer to another tree node (left means
+%                             the splitting attribute was false)
+%       right               - right pointer to another tree node (right
+%                             means the splitting attribute was true)
 numberAttr= length(activeAttributes);
 numberEx = length(examples(:,1));
 tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
@@ -23,13 +39,13 @@ if (sum(activeAttributes) == 0);
     return
 end
 
-gainx = zeros(1,num_outcome);
-gainind = zeros(1,num_outcome);
-boundOut = zeros(1,num_outcome);
+gainx = zeros(1,num_outcome);     % Keeps track of highest attribute gain
+gainind = zeros(1,num_outcome);   % Indices of best attributes for splitting
+boundOut = zeros(1,num_outcome);  % Keeping track of the best boundaries for splitting
 
-% Need to first iterate through all possible outcomes. Then using one vs
-% all classification find the best attribute to split on. However since the
-% data is continuous, need to use each different data point as a decision
+% Need to first iterate through all possible outcomes. Then using "one vs
+% all" classification find the best attribute to split on. However since the
+% data is continuous, need to use mean between different data point as a decision
 % boundary and find the one which gives the lowest entropy.
 for k=1:num_outcome
     ele = un(k); % Stores the current outcome element being tested with.
@@ -110,7 +126,7 @@ for k=1:num_outcome
                 end
                 ent_1=p_ent1+p_ent0;
                 
-                gains(l)=currentEnt- ( ((s1/numberEx)*ent_1) + ((s0/numberEx)*ent_0) );
+                gains(l)=currentEnt- ( ((s1/numberEx)*ent_1) + ((s0/numberEx)*ent_0) );  % Finding information gain
                 
             end
             % Picking best attribute and corresponding decision attribute
