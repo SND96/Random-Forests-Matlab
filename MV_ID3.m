@@ -6,8 +6,6 @@ tree = struct('value','null','bound' ,'null', 'left', 'null', 'right', 'null');
 
 lastColumn = examples(:, numberAttr+1);  % Stores the outcomes column
 un =unique(lastColumn);  % Finds all the unique elements in the outcomes column
-
- 
 num_outcome = length(un);  % Stores number of unique outcomes
 
 if(num_outcome == 1)
