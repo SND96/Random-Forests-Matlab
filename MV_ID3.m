@@ -122,16 +122,22 @@ for k=1:num_outcome
     
     % Picking the attribute and corresponding boundary that maximizes gains
     [gainx(k), gainind(k)]=max(gainAttr);
+    
+    
+       
     boundOut(k) = boundValue(gainind(k));
 end
 % Finding the max information gain index.
 % This index allows us to access the corresponding outcome, attribute and
 % decision boundary
-[~, ind]  = max(gainx);
+[m, ind]  = max(gainx);
 index = gainind(ind); % Required index
 fBound = boundOut(ind); % Decision boundary
 tree.value = attributes{index};
 tree.bound = fBound;
+if(m==0)
+    return
+end
 activeAttributes(index) = 0;
 ex_1=[];
 ex_0=[];
