@@ -4,33 +4,47 @@ clc;
 clear;
 
 fprintf('Loading Data \n');
+%==========================================================================%
 formatSpec = '%f%f%f%f%C';
 ex = readtable('irisdata.txt','Delimiter',',',...
     'Format',formatSpec);
 ex = table2cell(ex);
+
+%========converting text results in data set to numbers ====================%
+
 for i=1:150
     n=char(ex{i,5});
-   if(strcmp('Iris-setosa',n))
+    if(strcmp('Iris-setosa',n))
         ex{i,5} = 1;
-   elseif(strcmp('Iris-virginica',n))
+    elseif(strcmp('Iris-virginica',n))
         ex{i,5} = 3;
-   else
+    else
        ex{i,5} = 2;
-   end        
+    end        
 end    
+
 ex = cell2mat(ex);
+
+%================= setting up attributes vector ==========================%
 attributes = {'sepal length','sepal width','petal length','petal width'};
 numAttributes = 4;
 %===========================================================================%
+
+
 fprintf('Load Complete, Press enter to continue \n');
 pause;
 clc
 %===========================================================================%
+
+
+%=============================Decision Tree=================================%
 fprintf('Decision Trees \n');
 
 tree = MV_ID3(ex,attributes,ones(length(attributes),1));
+
 predictions = zeros(150,1);
 correct = 0;
+
 for i = 1:150
     predictions(i) = ClassifyByTree(tree,attributes,ex(i,:));
     if(predictions(i) == ex(i,5) )
@@ -51,7 +65,7 @@ clc
 
 classifications=zeros(150,2);
 
-
+%testing out the data in the example set
 for i = 1:150
     instance = ex(i,:);
     percentages = zeros(3,1);
@@ -74,6 +88,7 @@ end
 
 correct =0;
 
+%=================== Printing out the results of the forest================%
 fprintf('Confidence \t \t Classification \n')
 for i= 1:150
     if(classifications(i,2) == ex(i,5))
