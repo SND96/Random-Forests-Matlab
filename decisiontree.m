@@ -37,7 +37,11 @@ numAttributes = 4;
    % fprintf('Trial: %d\n\n', i);
     tree = MV_ID3(ex, attributes, ones(1,numAttributes));
     PrintTree(tree,'null','null');
-    
+%      for i = 1:150
+%          outcome = ClassifyByTree(tree, attributes, ex(i,:));
+%          fprintf(outcome);
+%      end 
+%     
     % Split data into training and testing sets randomly
 %     % Use randsample to get a vector of row numbers for the training set
 %     rows = sort(randsample(numInstances, trainingSetSize));
